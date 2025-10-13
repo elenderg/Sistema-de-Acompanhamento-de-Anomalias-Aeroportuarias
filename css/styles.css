@@ -1,0 +1,107 @@
+:root {
+  --tile-gap: .8rem;
+  --tile-size: 120px;
+}
+
+body {
+  background: #f4f6fb;
+  color: #222;
+}
+
+.app-header {
+  background: linear-gradient(90deg, #0d6efd 0%, #6610f2 100%);
+  color: #fff;
+}
+
+.metro-grid {
+  display: flex;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  flex-wrap: wrap;
+  gap: 10px;
+  /*gap: var(--tile-gap)*/
+}
+/*
+.tile {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 6px 18px rgba(12, 18, 40, 0.06);
+  height: var(--tile-size)
+}*/
+
+
+.tile {
+  flex: 1 1 220px; /* largura mínima, cresce se couber */
+  min-width: 200px;
+  max-width: 300px;
+  height: 100px;
+  white-space: normal; /* permite quebra de linha */
+  word-wrap: break-word;
+  overflow: hidden;
+  text-align: left;
+  padding: 10px;
+}
+
+.tile .fa-2x {
+  opacity: .95;
+}
+
+.tile .label {
+  font-weight: 600;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.2;
+}
+
+.tile.small {
+  height: 100px;
+}
+
+.tile .d-flex {
+  align-items: flex-start;
+}
+
+
+/* status indicators */
+.status-green {
+  background: rgba(34, 197, 94, 0.12);
+  border-left: 4px solid #22c55e;
+}
+
+.status-yellow {
+  background: rgba(250, 204, 21, 0.12);
+  border-left: 4px solid #f59e0b;
+}
+
+.status-red {
+  background: rgba(239, 68, 68, 0.12);
+  border-left: 4px solid #ef4444;
+}
+
+#map {
+  height: 70vh;
+  border-radius: 12px;
+}
+
+.form-section {
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(12, 18, 40, 0.04);
+}
+
+footer {
+  font-size: .9rem;
+  padding: 12px;
+}
+
+@media (max-width:576px) {
+  :root {
+    --tile-size: 100px;
+  }
+}

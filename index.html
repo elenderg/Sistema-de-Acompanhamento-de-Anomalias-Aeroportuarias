@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sistema de Anomalias — Aeródromos</title>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+   <!-- Estilos personalizados -->
+  <link rel="stylesheet" href="./css/styles.css" />
+  <style> </style>
+</head>
+<body>
+  <header class="app-header py-3">
+    <div class="container d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-3">
+        <i class="fa-solid fa-plane fa-2x"></i>
+        <div>
+          <h4 class="mb-0">Painel de Anomalias — Aeródromos</h4>
+          <small>Operadores • Gerentes • Supervisão</small>
+        </div>
+      </div>
+      <nav>
+        <div class="btn-group" role="group">
+          <button class="btn btn-light" id="btn-op">Operador</button>
+          <button class="btn btn-light" id="btn-ger">Gerente</button>
+          <button class="btn btn-light" id="btn-sup">Supervisão</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container my-4">
+    <!-- MÓDULO DO OPERADOR -->
+    <section id="module-operator">
+      <div class="row g-3">
+        <div class="col-12 col-md-4">
+          <div class="form-section">
+            <h5>Operador — registrar anomalia</h5>
+            <p class="mb-1">ICAO</p>
+            <select id="op-icao" class="form-select mb-2"></select>
+            <p class="mb-1">Categoria</p>
+            <div id="tiles" class="metro-grid mb-2">
+              <!-- ÁREA PREENCHIDA POR JS -->
+            </div>
+            <p class="mb-1">Descrição (opcional)</p>
+            <textarea id="op-desc" class="form-control mb-2" rows="3" placeholder="Detalhes sobre a anomalia..."></textarea>
+            <div class="d-flex gap-2">
+              <button id="report-btn" class="btn btn-primary">Reportar</button>
+              <button id="clear-btn" class="btn btn-outline-secondary">Limpar</button>
+            </div>
+            <small class="text-muted d-block mt-2">As anomalias ficam salvas no armazenamento local do navegador (ex.: para demonstração). Em produção, conecte com API.</small>
+          </div>
+        </div>
+        <div class="col-12 col-md-8">
+          <div class="form-section">
+            <h5>Últimos relatórios</h5>
+            <div id="reports-list" style="min-height:180px"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MÓDULO DO GERENTE -->
+    <section id="module-manager" style="display:none">
+      <div class="row g-3">
+        <div class="col-12 col-md-5">
+          <div class="form-section">
+            <h5>Gerente — configurar aeródromo</h5>
+            <p class="mb-1">ICAO</p>
+            <input id="mgr-icao" class="form-control mb-2" placeholder="Ex.: SBGR" />
+            <p class="mb-1">Nome / Local</p>
+            <input id="mgr-name" class="form-control mb-2" placeholder="Nome do aeródromo" />
+            <p class="mb-1">Coordenadas</p>
+            <div class="d-flex gap-2 mb-2">
+              <input id="mgr-lat" class="form-control" placeholder="Latitude" />
+              <input id="mgr-lon" class="form-control" placeholder="Longitude" />
+            </div>
+            <p class="mb-1">Auxílios disponíveis (marque apenas os que existem)</p>
+            <div id="mgr-aids" class="d-flex flex-wrap gap-2 mb-2">
+              <!-- caixas de seleção preenchidas por JS -->
+            </div>
+            <div class="d-flex gap-2">
+              <button id="save-airport" class="btn btn-success">Salvar aeródromo</button>
+              <button id="delete-airport" class="btn btn-danger">Remover aeródromo</button>
+            </div>
+            <small class="text-muted d-block mt-2">Os gerentes controlam quais tiles serão visíveis para os operadores daquele aeródromo.</small>
+          </div>
+        </div>
+        <div class="col-12 col-md-7">
+          <div class="form-section">
+            <h5>Lista de aeródromos</h5>
+            <div id="airports-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MÓDULO DO SUPERVISOR -->
+    <section id="module-supervisor" style="display:none">
+      <div class="row">
+        <div class="col-12">
+          <div class="form-section mb-3">
+            <h5>Supervisão — mapa</h5>
+            <div id="map"></div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-section">
+            <h5>Legenda e ações</h5>
+            <div class="d-flex gap-3 flex-wrap">
+              <div class="p-2 status-green rounded">Funcionando</div>
+              <div class="p-2 status-yellow rounded">Anomalia média</div>
+              <div class="p-2 status-red rounded">Anomalia crítica</div>
+              <button id="center-all" class="btn btn-outline-primary">Centralizar todos</button>
+              <button id="export-data" class="btn btn-outline-secondary">Exportar JSON</button>
+            </div>
+            <div id="map-info" class="mt-2"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="text-center">
+    <small>Pronto para hospedar na Netlify — arraste este arquivo para o diretório do site ou conecte via Git.</small>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="./js/script.js"></script>
+ 
+</body>
+</html>
