@@ -43,9 +43,9 @@ O site é construído com **HTML, CSS (Bootstrap 5), FontAwesome e JavaScript pu
 
 ## Estrutura do Projeto
 
-│   index.html  -  página inicial do projeto  
-│   LICENSE  
-│   README.md --  este arquivo  
+│   index.html  --  página inicial do projeto  
+│   LICENSE     --  arquivo de licença
+│   README.md   --  este arquivo  
 │  
 │───css  
 │       styles.css  -- folha de estilos  
