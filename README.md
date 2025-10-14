@@ -47,10 +47,10 @@ O site é construído com **HTML, CSS (Bootstrap 5), FontAwesome e JavaScript pu
 │   LICENSE  
 │   README.md --  este arquivo  
 │  
-├───css  
+│───css  
 │       styles.css  -- folha de estilos  
 │  
-└───js  
+│───js  
         script.js  -- scripts para o site  
 ---
 
