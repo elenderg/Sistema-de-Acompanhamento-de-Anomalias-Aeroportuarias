@@ -43,3 +43,26 @@ O site é construído com **HTML, CSS (Bootstrap 5), FontAwesome e JavaScript pu
 
 ## Estrutura do Projeto
 
+│   index.html  --  página inicial do projeto  
+│   LICENSE     --  arquivo de licença  
+│   README.md   --  este arquivo  
+│  
+│───css  
+│       styles.css  -- folha de estilos  
+│  
+│───js  
+│       script.js  -- scripts para o site  
+---
+
+## Como usar
+
+1. Clone este repositório:
+```bash
+git clone https://github.com/seu-usuario/aerodromos-dashboard.git
+```
+2. Abra index.html no navegador para testar localmente.
+3. Para deploy na Netlify:
+Faça login em Netlify
+Clique em "New Site from Git"
+Selecione o repositório e finalize o deploy.
+4. Ao abrir o site, você pode alternar entre Operador, Gerente e Supervisão pelos botões do topo.
