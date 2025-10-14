@@ -51,7 +51,7 @@ O site é construído com **HTML, CSS (Bootstrap 5), FontAwesome e JavaScript pu
 │       styles.css  -- folha de estilos  
 │  
 │───js  
-        script.js  -- scripts para o site  
+│       script.js  -- scripts para o site  
 ---
 
 ## Como usar
