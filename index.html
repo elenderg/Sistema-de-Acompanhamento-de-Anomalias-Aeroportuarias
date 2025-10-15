@@ -1,145 +1,355 @@
-<!doctype html>
 <html lang="pt-BR">
-
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sistema de Anomalias — Aeródromos</title>
-  <!-- Bootstrap 5 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome for icons -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <!-- Leaflet -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <!-- Estilos personalizados -->
-  <link rel="stylesheet" href="./css/styles.css" />
-  <style> </style>
-</head>
-
-<body>
-  <header class="app-header py-3">
-    <div class="container d-flex align-items-center justify-content-between">
-      <div class="d-flex align-items-center gap-3">
-        <i class="fa-solid fa-plane fa-2x"></i>
-        <div>
-          <h4 class="mb-0">Painel de Anomalias — Aeródromos</h4>
-          <small>Operadores • Gerentes • Supervisão</small>
-        </div>
-      </div>
-      <nav>
-        <div class="btn-group" role="group">
-          <button class="btn btn-light" id="btn-op">Operador</button>
-          <button class="btn btn-light" id="btn-ger">Gerente</button>
-          <button class="btn btn-light" id="btn-sup">Supervisão</button>
-        </div>
-      </nav>
-    </div>
-  </header>
-
-   <main class="container my-4">
-    <!-- MÓDULO DO OPERADOR -->
-    <section id="module-operator">
-      <div class="row g-3">
-        <div class="col-12 col-md-12">
-          <div class="form-section">
-            <h5>Operador — registrar anomalia</h5>
-            <p class="mb-1">ICAO</p>
-            <select id="op-icao" class="form-select mb-2"></select>
-            <p class="mb-1">Categoria</p>
-            <div id="tiles" class="metro-grid mb-2">
-              <!-- ÁREA PREENCHIDA POR JS -->
-            </div>
-            <p class="mb-1">Descrição (opcional)</p>
-            <textarea id="op-desc" class="form-control mb-2" rows="3" placeholder="Detalhes sobre a anomalia..."></textarea>
-            <div class="d-flex gap-2">
-              <button id="report-btn" class="btn btn-primary">Reportar</button>
-              <button id="clear-btn" class="btn btn-outline-secondary">Limpar</button>
-            </div>
-            <small class="text-muted d-block mt-2">As anomalias ficam salvas no armazenamento local do navegador (ex.: para demonstração). Em produção, conecte com API.</small>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Sistema de Anomalias — Aeródromos</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="./css/styles.css">
+    <style> </style>
+  </head>
+  <body>
+    <header class="app-header py-3">
+      <div class="container d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+          <i class="fa-solid fa-plane fa-2x"></i>
+          <div>
+            <h4 class="mb-0">Painel de Anomalias — Aeródromos</h4>
+            <small>Operadores • Gerentes • Supervisão</small>
           </div>
         </div>
-        <div class="col-12 col-md-12">
-          <div class="form-section">
-            <h5>Últimos relatórios</h5>
-            <div id="reports-list" style="min-height:180px"></div>
+        <nav>
+          <div class="btn-group" role="group">
+            <button class="btn btn-light" id="btn-operador">Operador</button>
+            <button class="btn btn-light" id="btn-gerente">Gerente</button>
+            <button class="btn btn-light" id="btn-supervisor">Supervisão</button>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <main class="container my-4">
+      <!-- MÓDULO DO OPERADOR -->
+      <section id="módulo-operador">
+        <div class="row g-3">
+          <div class="col-12 col-md-12">
+            <div class="form-section">
+              <h5>Operador — registrar anomalia</h5>
+              <p class="mb-1">ICAO</p>
+              <select id="operador-icao" class="form-select mb-2">
+                <option value="" disabled selected>Selecione o aeródromo</option>
+                <option value="SBHT">SBHT — Altamira</option>
+                <option value="SBGR">SBGR — São Paulo/Guarulhos</option>
+                <option value="SBSP">SBSP — São Paulo/Congonhas</option>
+                <option value="SBCF">SBCF — Cuiabá</option>
+              </select>
+              <p class="mb-1">Categoria</p>
+              <div id="tiles" class="metro-grid mb-2">
+                <button class="tile btn border text-start"
+                  data-id="meteo" data-selected="1"> <!--border-primary-->
+                  <div class="d-flex align-items-center w-100">
+                    <i class="fa fa-cloud-sun fa-2x me-3"></i>
+                    <div>
+                      <div class="label">Condições Meteorológicas</div>
+                      <!--<small class="text-muted">gravidade 2</small>-->
+                      
+                    </div>
+                  </div>
+                </button>
+                <div>
+                        <input type="radio" name="meteo-status" value="VMC" id="meteo-vmc">
+                        <label for="meteo-vmc">VMC</label><br>
+                        <input type="radio" name="meteo-status" value="IMC" id="meteo-imc">
+                        <label for="meteo-imc">IMC</label><br>
+                        <input type="radio" name="meteo-status" value="MA" id="meteo-ma">
+                        <label for="meteo-ma">MA</label><br>
+                        <input type="radio" name="meteo-status" value="MD" id="meteo-md">
+                        <label for="meteo-md">MD</label><br>
+                        <input type="radio" name="meteo-status" value="MG" id="meteo-mg">
+                        <label for="meteo-mg">MG</label>
+                      </div>
+                <button class="tile btn border text-start" data-id="aux" data-selected="1">
+                  <div class="d-flex align-items-center w-100">
+                    <i class="fa fa-location-dot fa-2x me-3"></i>
+                    <div>
+                      <div class="label">Auxílios (VOR, NDB, ILS...)</div>
+                      <!--<small class="text-muted">gravidade 3</small>-->
+                    </div>
+                  </div>
+                </button>
+                <button class="tile btn border text-start" data-id="lights" data-selected="1">
+                  <div class="d-flex align-items-center w-100">
+                    <i class="fa fa-lightbulb fa-2x me-3"></i>
+                    <div>
+                      <div class="label">Luzes (Balizamento, Farol)</div>
+                      <!--<small class="text-muted">gravidade 2</small>-->
+                    </div>
+                  </div>
+                </button>
+                <button class="tile btn border text-start" data-id="comm" data-selected="1">
+                  <div class="d-flex align-items-center w-100">
+                    <i class="fa fa-walkie-talkie fa-2x me-3"></i>
+                    <!--<i class="fa fa-solid fa-wifi fa-2x me-3"></i>-->
+                    <div>
+                      <div class="label">Comunicação / Rádio</div>
+                      <!--<small class="text-muted">gravidade 3</small>-->
+                    </div>
+                  </div>
+                </button>
+                <button class="tile btn border text-start" data-id="network" data-selected="1">
+                  <div class="d-flex align-items-center w-100">
+                    <i class="fa fa-network-wired fa-2x me-3"></i>
+                    <div>
+                      <div class="label">Internet / Transmissão</div>
+                      <!--<small class="text-muted">gravidade 2</small>-->
+                    </div>
+                  </div>
+                </button>
+              </div>
+              <p class="mb-1">Descrição (opcional)</p>
+              <textarea id="operador-desc" class="form-control mb-2" rows="3"
+                placeholder="Detalhes sobre a inoperância..."></textarea>
+              <div class="d-flex gap-2">
+                <button id="botão_relatório" class="btn btn-primary">Reportar</button>
+                <button id="clear-btn" class="btn btn-outline-secondary">Limpar</button>
+              </div>
+              <small class="text-muted d-block mt-2">As anomalias ficam salvas no armazenamento local do navegador (ex.:
+              para demonstração). Em produção, conecte com API.</small>
+            </div>
+          </div>
+          <div class="col-12 col-md-12">
+            <div class="form-section">
+              <h5>Últimos relatórios</h5>
+              <div id="relatórios-lista" style="min-height:180px">
+                <div class="text-muted">Nenhum relatório</div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-
-    <!-- MÓDULO DO GERENTE -->
-    <section id="module-manager" style="display:none">
-      <div class="row g-3">
-        <div class="col-12 col-md-5">
-          <div class="form-section">
-            <h5>Gerente — configurar aeródromo</h5>
-            <p class="mb-1">ICAO</p>
-            <input id="mgr-icao" class="form-control mb-2" placeholder="Ex.: SBGR" />
-            <p class="mb-1">Nome / Local</p>
-            <input id="mgr-name" class="form-control mb-2" placeholder="Nome do aeródromo" />
-            <p class="mb-1">Coordenadas</p>
-            <div class="d-flex gap-2 mb-2">
-              <input id="mgr-lat" class="form-control" placeholder="Latitude" />
-              <input id="mgr-lon" class="form-control" placeholder="Longitude" />
-            </div>
-            <p class="mb-1">Auxílios disponíveis (marque apenas os que existem)</p>
-            <div id="mgr-aids" class="d-flex flex-wrap gap-2 mb-2">
-              <!-- caixas de seleção preenchidas por JS -->
-            </div>
-            <div class="d-flex gap-2">
-              <button id="save-airport" class="btn btn-success">Salvar aeródromo</button>
-              <button id="delete-airport" class="btn btn-danger">Remover aeródromo</button>
-            </div>
-            <small class="text-muted d-block mt-2">Os gerentes controlam quais tiles serão visíveis para os operadores
+      </section>
+      <!-- MÓDULO DO GERENTE -->
+      <section id="módulo-gerente" style="display:none">
+        <div class="row g-3">
+          <div class="col-12 col-md-5">
+            <div class="form-section">
+              <h5>Gerente — configurar aeródromo</h5>
+              <p class="mb-1">ICAO</p>
+              <input id="gerente-icao" class="form-control mb-2" placeholder="Ex.: SBGR">
+              <p class="mb-1">Nome / Local</p>
+              <input id="gerente-name" class="form-control mb-2" placeholder="Nome do aeródromo">
+              <p class="mb-1">Coordenadas</p>
+              <div class="d-flex gap-2 mb-2">
+                <input id="gerente-latitude" class="form-control" placeholder="Latitude">
+                <input id="gerente-longitude" class="form-control" placeholder="Longitude">
+              </div>
+              <p class="mb-1">Auxílios disponíveis (marque apenas os que existem)</p>
+              <div id="gerente-recursos_disponíveis" class="d-flex flex-wrap gap-2 mb-2">
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="c_meteo" data-id="meteo">
+                    <label class="form-check-label" for="c_meteo">Condições Meteorológicas</label>
+                  </div>
+                </div>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="c_aux" data-id="aux">
+                    <label class="form-check-label" for="c_aux">Auxílios (VOR, NDB, ILS...)</label>
+                  </div>
+                </div>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="c_lights" data-id="lights">
+                    <label class="form-check-label" for="c_lights">Luzes (Balizamento, Farol)</label>
+                  </div>
+                </div>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="c_comm" data-id="comm">
+                    <label class="form-check-label" for="c_comm">Comunicação / Rádio</label>
+                  </div>
+                </div>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="c_network" data-id="network">
+                    <label class="form-check-label" for="c_network">Internet / Transmissão</label>
+                  </div>
+                </div>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="c_runway" data-id="runway">
+                    <label class="form-check-label" for="c_runway">Pista (Incursão / Impraticabilidade)</label>
+                  </div>
+                </div>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="c_accident" data-id="accident">
+                    <label class="form-check-label" for="c_accident">Acidente / Incidente</label>
+                  </div>
+                </div>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="c_other" data-id="other">
+                    <label class="form-check-label" for="c_other">Outro</label>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex gap-2">
+                <button id="save-airport" class="btn btn-success">Salvar aeródromo</button>
+                <button id="delete-airport" class="btn btn-danger">Remover aeródromo</button>
+              </div>
+              <small class="text-muted d-block mt-2">Os gerentes controlam quais tiles serão visíveis para os operadores
               daquele aeródromo.</small>
-          </div>
-        </div>
-        <div class="col-12 col-md-7">
-          <div class="form-section">
-            <h5>Lista de aeródromos</h5>
-            <div id="airports-list"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- MÓDULO DO SUPERVISOR -->
-    <section id="module-supervisor" style="display:none">
-      <div class="row">
-        <div class="col-12">
-          <div class="form-section mb-3">
-            <h5>Supervisão — mapa</h5>
-            <div id="map"></div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="form-section">
-            <h5>Legenda e ações</h5>
-            <div class="d-flex gap-3 flex-wrap">
-              <div class="p-2 status-green rounded">Funcionando</div>
-              <div class="p-2 status-yellow rounded">Anomalia média</div>
-              <div class="p-2 status-red rounded">Anomalia crítica</div>
-              <button id="center-all" class="btn btn-outline-primary">Centralizar todos</button>
-              <button id="export-data" class="btn btn-outline-secondary">Exportar JSON</button>
             </div>
-            <div id="map-info" class="mt-2"></div>
+          </div>
+          <div class="col-12 col-md-7">
+            <div class="form-section">
+              <h5>Lista de aeródromos</h5>
+              <div id="airports-lista">
+                <div class="table-responsive">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>ICAO</th>
+                        <th>Nome</th>
+                        <th>Coords</th>
+                        <th>Auxílios</th>
+                        <th>Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>SBGR</td>
+                        <td>São Paulo/Guarulhos</td>
+                        <td>-23.4356 , -46.4731</td>
+                        <td>meteo, lights, comm, network, aux</td>
+                        <td>
+                          <button class="btn btn-sm btn-primary sel-airport" data-icao="SBGR">Editar</button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>SBSP</td>
+                        <td>São Paulo/Congonhas</td>
+                        <td>-23.6261 , -46.6567</td>
+                        <td>meteo, lights, runway</td>
+                        <td>
+                          <button class="btn btn-sm btn-primary sel-airport" data-icao="SBSP">Editar</button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>SBCF</td>
+                        <td>Cuiabá</td>
+                        <td>-15.652 , -56.116</td>
+                        <td>meteo, comm</td>
+                        <td>
+                          <button class="btn btn-sm btn-primary sel-airport" data-icao="SBCF">Editar</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-  </main>
-
-
-  
- <footer class="text-center">
-    <small>Pronto para hospedar na Netlify — arraste este arquivo para o diretório do site ou conecte via Git.</small>
-  </footer>
-
-  <!-- Scripts -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="./js/script.js"></script>
-
-</body>
-
+      </section>
+      <!-- MÓDULO DO SUPERVISOR -->
+      <section id="módulo-supervisor" style="display:none">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-section mb-3">
+              <h5>Supervisão — mapa</h5>
+              <div id="map"
+                class="leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"
+                tabindex="0" style="position: relative;">
+                <div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(0px, 0px, 0px);">
+                  <div class="leaflet-pane leaflet-tile-pane">
+                    <div class="leaflet-layer " style="z-index: 1; opacity: 1;">
+                      <div class="leaflet-tile-container leaflet-zoom-animated"
+                        style="z-index: 19; transform: translate3d(0px, 0px, 0px) scale(1);"><img alt=""
+                        src="https://b.tile.openstreetmap.org/4/5/8.png" class="leaflet-tile leaflet-tile-loaded"
+                        style="width: 256px; height: 256px; transform: translate3d(-223px, -182px, 0px); opacity: 1;">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="leaflet-pane leaflet-overlay-pane">
+                    <svg pointer-events="none" class="leaflet-zoom-animated"
+                      width="0" height="0" viewBox="0 0 0 0" style="transform: translate3d(0px, 0px, 0px);">
+                      <g>
+                        <path class="leaflet-interactive" stroke="green" stroke-opacity="1" stroke-width="3"
+                          stroke-linecap="round" stroke-linejoin="round" fill="green" fill-opacity="0.35"
+                          fill-rule="evenodd" d="M0 0"></path>
+                        <path class="leaflet-interactive" stroke="green" stroke-opacity="1" stroke-width="3"
+                          stroke-linecap="round" stroke-linejoin="round" fill="green" fill-opacity="0.35"
+                          fill-rule="evenodd" d="M0 0"></path>
+                        <path class="leaflet-interactive" stroke="green" stroke-opacity="1" stroke-width="3"
+                          stroke-linecap="round" stroke-linejoin="round" fill="green" fill-opacity="0.35"
+                          fill-rule="evenodd" d="M0 0"></path>
+                      </g>
+                    </svg>
+                  </div>
+                  <div class="leaflet-pane leaflet-shadow-pane"></div>
+                  <div class="leaflet-pane leaflet-marker-pane"></div>
+                  <div class="leaflet-pane leaflet-tooltip-pane"></div>
+                  <div class="leaflet-pane leaflet-popup-pane"></div>
+                  <div class="leaflet-proxy leaflet-zoom-animated"
+                    style="transform: translate3d(1503px, 2230.09px, 0px) scale(8);"></div>
+                </div>
+                <div class="leaflet-control-container">
+                  <div class="leaflet-top leaflet-left">
+                    <div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in"
+                      href="#" title="Zoom in" role="button" aria-label="Zoom in" aria-disabled="false"><span
+                      aria-hidden="true">+</span></a><a class="leaflet-control-zoom-out" href="#" title="Zoom out"
+                      role="button" aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a>
+                    </div>
+                  </div>
+                  <div class="leaflet-top leaflet-right"></div>
+                  <div class="leaflet-bottom leaflet-left"></div>
+                  <div class="leaflet-bottom leaflet-right">
+                    <div class="leaflet-control-attribution leaflet-control">
+                      <a href="https://leafletjs.com"
+                        title="A JavaScript library for interactive maps">
+                        <svg aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"
+                          class="leaflet-attribution-flag">
+                          <path fill="#4C7BE1" d="M0 0h12v4H0z"></path>
+                          <path fill="#FFD500" d="M0 4h12v3H0z"></path>
+                          <path fill="#E0BC00" d="M0 7h12v1H0z"></path>
+                        </svg>
+                        Leaflet
+                      </a>
+                      <span aria-hidden="true">|</span> © OpenStreetMap contributors
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-section">
+              <h5>Legenda e ações</h5>
+              <div class="d-flex gap-3 flex-wrap">
+                <div class="p-2 status-green rounded">Funcionando</div>
+                <div class="p-2 status-yellow rounded">Anomalia média</div>
+                <div class="p-2 status-red rounded">Anomalia crítica</div>
+                <button id="center-all" class="btn btn-outline-primary">Centralizar todos</button>
+                <button id="export-data" class="btn btn-outline-secondary">Exportar JSON</button>
+              </div>
+              <div id="map-info" class="mt-2"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="text-center">
+      <small></small>
+    </footer>
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!--<script src="./js/script pt-BR.js"></script>-->
+  </body>
 </html>
