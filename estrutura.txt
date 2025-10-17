@@ -1,0 +1,112 @@
+METEOROLOGIA
+1) VMC:
+  a) Desmarca todos os demais itens selecionados no grupo de meteorologia.
+  b) Altera o nível de gravidade para 0.
+
+2)IMC:
+  a) altera o nível de gravidade para 1.
+  b) exibe uma nova seção com os seguintes campos:
+    i) Tipo de fenômeno (checkboxes):
+      a) precipitação:
+    ‐ chuvisco – DZ;
+    ‐ chuva – RA;
+    ‐ neve – SN;
+    ‐ grão de neve – SG;
+    ‐ pelotas de gelo – PL;
+    ‐ nevoeiro – FG: quando a visibilidade horizontal predominante for
+    inferior a 1.000 m, exceto se qualificado por “MI”, “BC”, “PR” ou “VC”;
+    ‐ névoa úmida – BR: quando a visibilidade horizontal predominante for de,
+    no mínimo, 1.000 m, até o limite de 5.000 m, inclusive;
+    ‐ granizo – GR: quando o diâmetro das pedras maiores for de 5 mm ou
+    mais; e
+    ‐ granizo pequeno e/ou pelotas de neve – GS: quando o diâmetro das
+    pedras maiores for inferior a 5 mm;      
+    ‐ areia – SA;
+    ‐ poeira (em área extensa) – DU;
+    ‐ névoa seca – HZ;
+    ‐ fumaça: FU – e
+    ‐ cinzas vulcânicas – VA; e    
+    NOTA: Essas descrições deverão ser utilizadas somente quando o
+    obscurecimento for, predominantemente, por litometeoros e a
+    visibilidade horizontal predominante for de 5.000 m ou menos,
+    exceto “SA” quando qualificado por “DR”, e cinzas vulcânicas.
+    outros fenômenos:
+    ‐ poeira/areia em redemoinhos – PO;
+    ‐ tempestade – SQ;
+    ‐ nuvem(ns) funil (tornado ou tromba d’água) – FC;
+    ‐ tempestade de poeira – DS; e
+    ‐ tempestade de areia – SS
+    Intensidade (radio buttons):
+      ‐ leve "-";
+      ‐ moderada " "; e
+      ‐ forte "+".
+    Proximidade (checkbox):
+      ‐ na vizinhança (num raio entre 8 km e 16 km do ponto de referência do aeródromo).
+    Agravantes
+    pancada 
+    – SH: utilizada para informar pancadas de algum tipo de precipitação:
+      ‐ de chuva – SHRA;
+      ‐ de neve – SHSN;
+      ‐ de pelotas de gelo – SHPL;
+      ‐ de granizo – SHGR;
+      ‐ de granizo pequeno e/ou grão de neve – SHGS; ou
+      ‐ combinações, por exemplo, SHRASN;
+    congelante 
+    – FZ: utilizada para informar gotas ou precipitação de água, em estado de congelamento, acompanhada dos seguintes fenômenos:
+    ‐ com nevoeiro – FZFG;
+    ‐ com chuvisco – FZDZ; e
+    ‐ com chuva – FZRA;
+    sopradas 
+    – BL: utilizada com os tipos de fenômenos abaixo, para informar que os mesmos foram levantados pelo vento a uma altura de 2 m ou mais acima do solo:
+    ‐ com poeira – BLDU;
+    ‐ com areia – BLSA; ou
+    ‐ com neve – BLSN;
+    flutuante 
+    – DR: utilizada com os tipos de fenômenos abaixo, para informar que os mesmos foram levantados pelo vento a uma altura menor que 2 m acima do solo:
+    ‐ com poeira – DRDU;
+    ‐ com areia – DRSA; ou
+    ‐ com neve – DRSN;
+    baixo 
+    – MI: utilizada para nevoeiro a uma altura até 2 m acima do solo. Deve ser informado se a visibilidade horizontal predominante, a 2 m acima do solo, for de 1.000 m ou mais e a visibilidade horizontal aparente, através da camada de nevoeiro, for inferior a 1.000 m;
+    banco 
+    – BC: bancos de nevoeiro cobrindo parte do aeródromo. Deve ser informado independentemente dos valores de visibilidade predominante ou mínima; e
+    h) parcial 
+    – PR: parte substancial do aeródromo coberta por nevoeiro, enquanto outra parte permanece clara. Deve ser informado independentemente dos valores de visibilidade predominante ou mínima.
+    A intensidade dos fenômenos de tempo presente ou, conforme o caso, a proximidade destes em relação ao aeródromo deve ser informada como se segue:
+    a) intensidade: utilizada em alguns tipos de tempo presente (Anexo A):
+    ‐ leve: sinal menos “ - ”;
+    ‐ moderada: sem sinal; e
+    ‐ forte: sinal mais “ + ”; e
+    NOTA: Utiliza-se intensidade leve somente para precipitação.
+    vizinhança: num raio entre 8 km e 16 km do ponto de referência do aeródromo e utilizada somente com os tipos de tempo presente mostrados no Anexo A.
+    NOTA: Trovoada na vizinhança (VCTS) deve ser informada mesmo que nuvem(ns) CB associada(s) esteja(m) a mais de 16 km. 
+  c) Juntamente com os campos acima, exibe 02 campos de texto para o preenchimento das seguintes informações:
+    i) Visibilidade horizontal predominante (em metros);
+    ii) Teto de Nuvens com altura (em pés); e
+
+3) MD:
+  a) altera o nível de gravidade para 2.
+  b) exibe uma nova seção com os mesmos campos do item 2.
+
+4) MA:
+  a) altera o nível de gravidade para 2.
+  b) exibe uma nova seção com os mesmos campos do item 2.
+
+5) MG
+  a) altera o nível de gravidade para 3.
+  b) exibe uma nova seção com os mesmos campos do item 2.
+
+
+
+
+    1) VMC: a) Desmarca todos os demais itens selecionados no grupo de meteorologia. b) Altera o nível de gravidade para 0.
+
+2) IMC: a) Altera o nível de gravidade para 1. b) Exibe uma nova seção com os seguintes campos: i) Tipo de Fenômeno (Checkboxes): - Precipitação: - Chuvisco (DZ) - Chuva (RA) - Neve (SN) - Grãos de neve (SG) - Pelotas de gelo (PL) - Granizo (GR): Diâmetro ≥ 5 mm. - Granizo pequeno e/ou pelotas de neve (GS): Diâmetro < 5 mm. - Obscurecedores: - Nevoeiro (FG): Visibilidade < 1.000 m. - Névoa úmida (BR): Visibilidade entre 1.000 m e 5.000 m. - Areia (SA) - Poeira (em área extensa) (DU) - Névoa seca (HZ) - Fumaça (FU) - Cinzas vulcânicas (VA) - Outros Fenômenos: - Poeira/areia em redemoinhos (PO) - Tempestade (SQ) - Nuvem(ns) funil (tornado ou tromba d’água) (FC) - Tempestade de poeira (DS) - Tempestade de areia (SS) ii) Intensidade (Radio Buttons): - Leve (-) - Moderada (sem sinal) - Forte (+) iii) Proximidade (Checkbox): - Na vizinhança (VC): Raio entre 8 km e 16 km do aeródromo. iv) Agravantes/Qualificadores (Checkboxes): - Pancada (SH): - de Chuva (SHRA) - de Neve (SHSN) - de Pelotas de gelo (SHPL) - de Granizo (SHGR / SHGS) - Congelante (FZ): - com Nevoeiro (FZFG) - com Chuvisco (FZDZ) - com Chuva (FZRA) - Sopradas (BL): Levantados a ≥ 2 m de altura. - com Poeira (BLDU) - com Areia (BLSA) - com Neve (BLSN) - Flutuante (DR): Levantados a < 2 m de altura. - com Poeira (DRDU) - com Areia (DRSA) - com Neve (DRSN) - Baixo (MI): Nevoeiro até 2 m de altura. - Banco (BC): Bancos de nevoeiro cobrindo parte do aeródromo. - Parcial (PR): Parte substancial do aeródromo coberta por nevoeiro. c) Exibe 2 campos de texto adicionais: i) Visibilidade horizontal predominante (em metros). ii) Teto de Nuvens com altura (em pés).
+
+3) MD: a) Altera o nível de gravidade para 2. b) Exibe uma nova seção com os mesmos campos do item 2) IMC.
+
+4) MA: a) Altera o nível de gravidade para 2. b) Exibe uma nova seção com os mesmos campos do item 2) IMC.
+
+5) MG: a) Altera o nível de gravidade para 3. b) Exibe uma nova seção com os mesmos campos do item 2) IMC.
+
+Espero que esta versão padronizada atenda às suas necessidades! Se precisar de mais algum ajuste, é só pedir.

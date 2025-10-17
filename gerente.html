@@ -1,0 +1,167 @@
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Sistema de Anomalias — Aeródromos</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="./css/styles.css">
+    <style> </style>
+  </head>
+  <body>
+    <header class="app-header py-3">
+      <div class="container d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+          <i class="fa-solid fa-plane fa-2x"></i>
+          <div>
+            <h4 class="mb-0">Painel de Anomalias — Aeródromos</h4>
+           
+          </div>
+        </div>
+        <nav>
+
+        </nav>
+      </div>
+    </header>
+    <main class="container my-4">      
+      <!-- MÓDULO DO GERENTE -->
+      <section id="módulo-gerente">
+        <div class="row g-3">
+          <div class="col-12 col-md-5">
+            <div class="form-section">
+              <h5>Gerente — configurar aeródromo</h5>
+              <p class="mb-1">ICAO</p>
+              <input id="gerente-icao" class="form-control mb-2" placeholder="Ex.: SBGR">
+              <p class="mb-1">Nome / Local</p>
+              <input id="gerente-name" class="form-control mb-2" placeholder="Nome do aeródromo">
+              <p class="mb-1">Coordenadas</p>
+              <div class="d-flex gap-2 mb-2">
+                <input id="gerente-latitude" class="form-control" placeholder="Latitude">
+                <input id="gerente-longitude" class="form-control" placeholder="Longitude">
+              </div>
+              <p class="mb-1">Auxílios disponíveis (marque apenas os que existem)</p>
+              <div id="gerente-recursos_disponíveis" class="d-flex flex-wrap gap-2 mb-2">
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="c_meteo" data-id="meteo">
+                    <label class="form-check-label" for="c_meteo">Condições Meteorológicas</label>
+                  </div>
+                </div>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="c_aux" data-id="aux">
+                    <label class="form-check-label" for="c_aux">Auxílios (VOR, NDB, ILS...)</label>
+                  </div>
+                </div>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="c_lights" data-id="lights">
+                    <label class="form-check-label" for="c_lights">Luzes (Balizamento, Farol)</label>
+                  </div>
+                </div>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="c_comm" data-id="comm">
+                    <label class="form-check-label" for="c_comm">Comunicação / Rádio</label>
+                  </div>
+                </div>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="c_network" data-id="network">
+                    <label class="form-check-label" for="c_network">Internet / Transmissão</label>
+                  </div>
+                </div>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="c_runway" data-id="runway">
+                    <label class="form-check-label" for="c_runway">Pista (Incursão / Impraticabilidade)</label>
+                  </div>
+                </div>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="c_accident" data-id="accident">
+                    <label class="form-check-label" for="c_accident">Acidente / Incidente</label>
+                  </div>
+                </div>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="c_other" data-id="other">
+                    <label class="form-check-label" for="c_other">Outro</label>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex gap-2">
+                <button id="save-airport" class="btn btn-success">Salvar aeródromo</button>
+                <button id="delete-airport" class="btn btn-danger">Remover aeródromo</button>
+              </div>
+              <small class="text-muted d-block mt-2">Os gerentes controlam quais tiles serão visíveis para os operadores
+              daquele aeródromo.</small>
+            </div>
+          </div>
+          <div class="col-12 col-md-7">
+            <div class="form-section">
+              <h5>Lista de aeródromos</h5>
+              <div id="airports-lista">
+                <div class="table-responsive">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>ICAO</th>
+                        <th>Nome</th>
+                        <th>Coords</th>
+                        <th>Auxílios</th>
+                        <th>Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>SBGR</td>
+                        <td>São Paulo/Guarulhos</td>
+                        <td>-23.4356 , -46.4731</td>
+                        <td>meteo, lights, comm, network, aux</td>
+                        <td>
+                          <button class="btn btn-sm btn-primary sel-airport" data-icao="SBGR">Editar</button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>SBSP</td>
+                        <td>São Paulo/Congonhas</td>
+                        <td>-23.6261 , -46.6567</td>
+                        <td>meteo, lights, runway</td>
+                        <td>
+                          <button class="btn btn-sm btn-primary sel-airport" data-icao="SBSP">Editar</button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>SBCF</td>
+                        <td>Cuiabá</td>
+                        <td>-15.652 , -56.116</td>
+                        <td>meteo, comm</td>
+                        <td>
+                          <button class="btn btn-sm btn-primary sel-airport" data-icao="SBCF">Editar</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    
+    </main>
+    <footer class="text-center">
+      <small></small>
+    </footer>
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!--<script src="./js/script pt-BR.js"></script>-->
+  </body>
+</html>

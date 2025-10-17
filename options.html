@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="radio" id="VMC" name="meteorologia" value="VMC">
+  <label for="VMC">VMC</label><br>
+  <input type="radio" id="IMC" name="meteorologia" value="IMC">
+  <label for="IMC">IMC</label><br>
+  <input type="radio" id="MD" name="meteorologia" value="MD">
+  <label for="MD">MD</label><br>
+  <input type="radio" id="MA" name="meteorologia" value="MA">
+  <label for="MA">MA</label><br>
+  <input type="radio" id="MG" name="meteorologia" value="MG">
+  <label for="MG">MG</label><br>
+
+  <div id="condições" style="display: none;">
+    <h2>Condições Meteorológicas</h2>
+    <p id="condição-selecionada"></p>
+    <input type="checkbox" name="chuva" id="chuva">
+    <label for="chuva">Chuva</label>
+    <input type="radio" name="forte" id="forte" value="+">
+    <label for="forte">Forte</label>
+    <input type="radio" name="moderada" id="moderada" value=" ">
+    <label for="moderada">Moderada</label>
+    <input type="radio" name="leve" id="leve" value="-">
+    <label for="leve">Leve</label>
+    <br>
+    <input type="checkbox" name="neve" id="neve">
+    <label for="neve">Neve</label><br>
+    <input type="checkbox" name="granizo" id="granizo">
+    <label for="granizo">Granizo</label><br>
+    <input type="checkbox" name="nevoeiro" id="nevoeiro">
+    <label for="nevoeiro">Nevoeiro</label><br>
+    <input type="checkbox" name="poeira" id="poeira">
+    <label for="poeira">Poeira</label><br>
+    <input type="checkbox" name="cinza_vulcânica" id="cinza_vulcânica">
+    <label for="cinza_vulcânica">Cinza Vulcânica</label>
+    <input type="number" maxlength="4" id="visibilidade" placeholder="Visibilidade (m)">
+    <input type="number" maxlength="4" id="teto" placeholder="Teto (ft)">    
+  </div>
+
+</body>
+</html>

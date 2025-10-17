@@ -1,0 +1,548 @@
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sistema de Anomalias — Aeródromos</title>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link href="https://site-assets.fontawesome.com/releases/v7.1.0/css/all.css" rel="stylesheet">
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <!-- Estilos personalizados -->
+  <link rel="stylesheet" href="./css/styles.css">
+  <style> </style>
+</head>
+
+<body>
+  <header class="app-header py-3">
+    <div class="container d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-3">
+        <i class="fa-solid fa-plane fa-2x"></i>
+        <div>
+          <h4 class="mb-0">Painel de Anomalias — Aeródromos</h4>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="container my-4">
+    <!-- MÓDULO DO OPERADOR -->
+    <section id="módulo-operador">
+      <div class="row g-3">
+        <div class="col-12 col-md-12">
+          <div class="form-section">
+            <h5>Operador — registrar anomalia</h5>
+            <p class="mb-1">ICAO</p>
+            <select id="operador-icao" class="form-select mb-2">
+              <option value="" disabled selected>Selecione o aeródromo</option>
+              <option value="SBHT">SBHT — Altamira</option>
+              <option value="SBGR">SBGR — São Paulo/Guarulhos</option>
+              <option value="SBSP">SBSP — São Paulo/Congonhas</option>
+              <option value="SBCF">SBCF — Cuiabá</option>
+            </select>
+            <p class="mb-1">Categoria</p>
+            <div id="tiles" class="metro-grid mb-2">
+              <button class="tile btn border text-start" data-id="meteo" data-selected="1"> <!--border-primary-->
+                <div class="d-flex align-items-center w-100">
+                  <i class="fa fa-cloud-sun fa-2x me-3"></i>
+                  <div>
+                    <div class="label">Condições Meteorológicas</div>
+                    <!--<small class="text-muted">gravidade 2</small>-->
+                  </div>
+                </div>
+              </button>
+              <button class="tile btn border text-start" data-id="aux" data-selected="1">
+                <div class="d-flex align-items-center w-100">
+                  <i class="fa fa-location-dot fa-2x me-3"></i>
+                  <div>
+                    <div class="label">Auxílios (VOR, NDB, ILS...)</div>
+                    <!--<small class="text-muted">gravidade 3</small>-->
+                  </div>
+                </div>
+              </button>
+              <button class="tile btn border text-start" data-id="lights" data-selected="1">
+                <div class="d-flex align-items-center w-100">
+                  <i class="fa fa-lightbulb fa-2x me-3"></i>
+                  <div>
+                    <div class="label">Luzes (Balizamento, Farol)</div>
+                    <!--<small class="text-muted">gravidade 2</small>-->
+                  </div>
+                </div>
+              </button>
+              <button class="tile btn border text-start" data-id="comm" data-selected="1">
+                <div class="d-flex align-items-center w-100">
+                  <i class="fa fa-walkie-talkie fa-2x me-3"></i>
+                  <!--<i class="fa fa-solid fa-wifi fa-2x me-3"></i> -->
+                  <div>
+                    <div class="label">Comunicação / Rádio</div>
+                    <!--<small class="text-muted">gravidade 3</small>-->
+                  </div>
+                </div>
+              </button>
+              <button class="tile btn border text-start" data-id="network" data-selected="1">
+                <div class="d-flex align-items-center w-100">
+                  <i class="fa fa-network-wired fa-2x me-3"></i>
+                  <div>
+                    <div class="label">Internet / Transmissão</div>
+                    <!--<small class="text-muted">gravidade 2</small>-->
+                  </div>
+                </div>
+              </button>
+            </div>
+            <div id="condições" style="display: ;">
+              <h2>Condições Meteorológicas</h2>
+              <div id="meteo-options">
+                <input type="radio" name="meteo-status" value="VMC" id="meteo-vmc" class="" checked>
+                <label for="meteo-vmc">
+                  <h6>VMC - Visual Meteorological Conditions</h6>
+                </label><br>
+                <input type="radio" name="meteo-status" value="IMC" id="meteo-imc">
+                <label for="meteo-imc">
+                  <h6>IMC - Instrument Meteorological Conditions</h6>
+                </label><br>
+                <input type="radio" name="meteo-status" value="MA" id="meteo-ma">
+                <label for="meteo-ma">
+                  <h6>MA - Abaixo dos mínimos para POUSO IFR</h6>
+                </label><br>
+                <input type="radio" name="meteo-status" value="MD" id="meteo-md">
+                <label for="meteo-md">
+                  <h6>MD - Abaixo dos mínimos para DECOLAGEM IFR</h6>
+                </label><br>
+                <input type="radio" name="meteo-status" value="MG" id="meteo-mg">
+                <label for="meteo-mg">
+                  <h6 title="Tal situação indica que as operações de POUSO e DECOLAGEM estão suspensas no aeródromo">
+                    MG - Abaixo dos mínimos para todas as operações em GERAL (POUSO e DECOLAGEM), sob IMC</h6>
+                </label><br>
+                <span><em>Visibilidade:&emsp;</em></span>
+                <input type="number" minlength="4" maxlength="4" id="visibilidade" placeholder="Ex: 5000 (m)">&emsp;
+                <span><em>Teto:&emsp;</em></span>
+                <input type="number" minlength="4" maxlength="4" id="teto" placeholder="Ex: 1500 (ft)">
+              </div>
+              <div id="precipitação">
+                <br>
+                <h6>Precipitação:</h6>
+                <input type="checkbox" name="chuvisco" id="chuvisco">
+                <label for="chuvisco"><i class="fa-solid fa-cloud-drizzle"></i> DZ - Chuvisco</label>&emsp;
+                <input type="checkbox" name="chuva" id="chuva">&emsp;
+                <label for="chuva"><i class="fa-solid fa-cloud-rain"></i> RA - Chuva</label><br>
+                <input type="checkbox" name="neve" id="neve">
+                <label for="neve"><i class="fa-solid fa-cloud-snow"></i> SN - Neve</label>&emsp;
+                <input type="checkbox" name="grão_de_neve" id="grão_de_neve">
+                <label for="grão_de_neve"><i class="fa-solid fa-snowflake"></i> SG - Grão de Neve</label>&emsp;
+                <input type="checkbox" name="pelotas_de_gelo" id="pelotas_de_gelo">
+                <label for="pelotas_de_gelo"><i class="fa-solid fa-snowflake-droplets"></i> PL - Pelotas de
+                  Gelo</label><br>
+                <input type="checkbox" name="granizo" id="granizo">
+                <label for="granizo"><i class="fa-solid fa-cloud-hail-mixed"></i> GR - Granizo</label>&emsp;
+                <input type="checkbox" name="granizo_pequeno" id="granizo_pequeno">
+                <label for="granizo_pequeno"><i class="fa-solid fa-cloud-hail"></i> GS - Granizo Pequeno</label>
+              </div>
+              <div id="hidrometeoros"><br>
+                <h6>Obscurecedores (hidrometeoros):</h6>
+                <input type="checkbox" name="nevoeiro" id="nevoeiro">
+                <label for="nevoeiro">FG - Nevoeiro</label>&emsp;
+                <input type="checkbox" name="névoa_úmida" id="névoa_úmida">
+                <label for="névoa_úmida">BR - Névoa Úmida</label>
+              </div>
+              <div id="litometeoros"><br>
+                <h6>Obscurecedores (litometeoros):</h6>
+                <input type="checkbox" name="areia" id="areia">
+                <label for="areia"><i class="fa-solid fa-hourglass"></i> SA - Areia</label>&emsp;
+                <input type="checkbox" name="poeira" id="poeira">
+                <label for="poeira"><i class="fa-solid fa-sun-dust"></i> DU - Poeira (em área extensa)</label>&emsp;
+                <input type="checkbox" name="névoa_seca" id="névoa_seca">
+                <label for="névoa_seca"><i class="fa-solid fa-cloud-fog"></i> HZ - Névoa Seca</label>&emsp;
+                <input type="checkbox" name="cinza_vulcânica" id="cinza_vulcânica">
+                <label for="cinza_vulcânica"><i class="fa-solid fa-volcano"></i> VA - Cinzas Vulcânicas</label>
+              </div>
+              <div id="outros_fenômenos"><br>
+                <h6>Outros fenômenos:</h6>
+                <input type="checkbox" name="poeira_em_redemoinhos" id="poeira_em_redemoinhos">
+                <label for="poeira_em_redemoinhos"><i class="fa-solid fa-tornado"></i> PO - Poeira/areia em
+                  redemoinhos</label><br>
+                <input type="checkbox" name="tempestade" id="tempestade">
+                <label for="tempestade"><i class="fa-solid fa-wind"></i> </i> SQ - Tempestade de vento</label>&emsp;
+                <input type="checkbox" name="tempestade_de_poeira" id="tempestade_de_poeira">
+                <label for="tempestade_de_poeira"><i class="fa-solid fa-wind-warning"></i> DS - Tempestade de
+                  poeira</label>&emsp;
+                <input type="checkbox" name="tempestade_de_areia" id="tempestade_de_areia">
+                <label for="tempestade_de_areia"><i class="fa-solid fa-sparkles"></i> SS - Tempestade de
+                  areia</label><br>
+                <input type="checkbox" name="nuvem_funil" id="nuvem_funil">
+                <label for="nuvem_funil"><i class="fa-solid fa-cloud-bolt"></i> FC - Nuvem(ns) funil (tornado ou tromba
+                  d’água)</label>
+              </div>
+              <div id="qualificadores">
+                <div id="qualificadores_de_chuva">
+                  <br>
+                  <h6>Qualificadores de intensidade para chuva:</h6>
+                  <input type="radio" id="forte" value="+" name="intensidade">
+                  <label for="forte"><i class="fa-solid fa-droplet-plus"></i> Forte</label>&emsp;
+                  <input type="radio" id="moderada" value=" " name="intensidade">
+                  <label for="moderada"><i class="fa-solid fa-droplet"></i>Moderada</label>&emsp;
+                  <input type="radio" id="leve" value="-" name="intensidade">
+                  <label for="leve"><i class="fa-solid fa-raindrops"></i> Leve</label><br>
+                </div>
+                <!-- Proximidade -->
+                <div>
+                  <br>
+                  <h6>Proximidade</h6>
+                  <div class="mb-3"> <!-- TODO: permitir selecionar apenas uma opção dos radio buttons abaixo-->
+                    <input class="form-check-input" type="radio" id="local" name="proximidade" value="local">
+                    <label class="form-check-label" for="local"><i class="fa-solid fa-location-dot"></i>No
+                      local</label>&emsp;
+                    <input class="form-check-input" type="radio" id="prox-vc" name="proximidade" value="VC">
+                    <label class="form-check-label" for="prox-vc"><i class="fa-solid fa-location-crosshairs"></i>Na
+                      vizinhança (VC)</label>
+                  </div>
+                </div>
+                <!-- Agravantes/Qualificadores -->
+                <h5>Agravantes/Qualificadores</h5>
+                <br>
+                <div class="mb-3">
+                  <div>
+                    <h6>Qualificadores de chuva, neve ou granizo</h6>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" id="agrav-sh" value="SH">
+                      <label class="form-check-label" for="agrav-sh"><i class="fa-solid fa-cloud-showers-heavy"></i>SH -
+                        Pancada (chuva/neve/gelo/granizo)</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" id="agrav-fz" value="FZ">
+                      <label class="form-check-label" for="agrav-fz"><i class="fa-solid fa-water-temperature"></i>FZ -
+                        Congelante (nevoeiro/chuvisco/chuva)</label>
+                      <!-- <i class="fa-solid fa-meteor"></i>-->
+                    </div>
+                  </div>
+                  <br>
+                  <div>
+                    <h6>Qualificadores de poeira, areia ou neve</h6>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="agrav-bl" value="BL"
+                        name="qualificadores_de_poeira_areia_neve">
+                      <label class="form-check-label" for="agrav-bl"><i class="fa-solid fa-water-temperature"></i> BL -
+                        Soprada (poeira/areia/neve)</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="agrav-dr" value="DR"
+                        name="qualificadores_de_poeira_areia_neve">
+                      <label class="form-check-label" for="agrav-dr"><i class="fa-solid fa-grip-dots"></i> DR -
+                        Flutuante (poeira/areia/neve)</label>
+                    </div>
+                  </div>
+                  <div>
+                    <br>
+                    <h6>Qualificadores de nevoeiro</h6>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="agrav-mi" value="MI"
+                        name="qualificadores_de_nevoeiro">
+                      <label class="form-check-label" for="agrav-mi"><i
+                          class="fa-solid fa-keyboard-brightness-low"></i>MI - Baixo (nevoeiro)</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="agrav-bc" value="BC"
+                        name="qualificadores_de_nevoeiro">
+                      <label class="form-check-label" for="agrav-bc"><i class="fa-solid fa-eye-low-vision"></i>BC -
+                        Banco (nevoeiro)</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="agrav-pr" value="PR"
+                        name="qualificadores_de_nevoeiro">
+                      <label class="form-check-label" for="agrav-pr"><i class="fa-solid fa-badge-percent"></i>PR -
+                        Parcial (nevoeiro)</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="auxílios" style="display: none;">
+              <!--Instrumentos de Auxílio à Navegação Aérea:
+              - Inoperância Total (radiobutton)
+              - Restrição de Uso (radiobutton) + text field (Exemplo: Inoperante entre as radiais 230 até 260)
+                NDB
+                VOR 
+                TACAN
+                DME
+                VOR/DME 
+                VORTAC
+                WDI (Biruta - Indicador de Direção do Vento)
+                RNAV/RNP (GNSS)
+                GBAS 
+                SBAS 
+                ABAS 
+                Recalada
+                ILS
+              -->
+              <h5>Auxílios à Navegação Aérea</h5>
+              <div id="aux-options">
+                <div id="NDB">
+                  <input class="form-check-input" type="checkbox" value="NDB" id="aux-ndb" checked>
+                  <label class="form-check-label" for="aux-ndb">
+                    NDB (Non-Directional Beacon)<br><br>
+                  <div id="aux-ndb-options" style="display: none; margin-left:20px;">
+                    <input type="radio" name="aux-status" value="inoperante" id="aux-inoperante" class="">
+                    <label for="aux-inoperante">
+                      <h6>Inoperância Total</h6>
+                    </label><br>                    
+                    <input type="radio" name="aux-status" value="restrição" id="aux-restrição">
+                    <label for="aux-restrição">
+                        <h6>Restrição de Uso</h6>
+                      </label><br>
+                    <div id="aux-detalhes" style="display: none;">
+                      <span ><em>Detalhes (opcional):&emsp;</em></span>
+                      <input type="text" id="aux-detalhes" placeholder="Exemplo: Inoperante entre as radiais 230 até 260">
+                    </div>
+                    <br>
+                  </div>
+                  </label>
+                </div>
+                <div id="VOR">
+                  <input class="form-check-input" type="checkbox" value="VOR" id="aux-vor" checked>
+                  <label class="form-check-label" for="aux-vor">
+                    VOR (VHF Omnidirectional Range)<br><br>
+                  <div id="aux-vor-options" style="display: none; margin-left:20px;">
+                    <input type="radio" name="aux-vor-status" value="inoperante" id="aux-vor-inoperante" class="">
+                    <label for="aux-vor-inoperante">
+                      <h6>Inoperância Total</h6>
+                    </label><br>
+                    <input type="radio" name="aux-vor-status" value="restrição" id="aux-vor-restrição">
+                    <label for="aux-vor-restrição">
+                      <h6>Restrição de Uso</h6>
+                    </label><br>
+                    <div id="aux-vor-detalhes" style="display: none;">
+                      <span ><em>Detalhes (opcional):&emsp;</em></span>
+                      <input type="text" id="aux-vor-detalhes" placeholder="Exemplo: Inoperante entre as radiais 230 até 260">
+                    </div>
+                    <br>
+                  </div>
+                  </label>
+                </div>
+                <div id="ILS">
+                  <input class="form-check-input" type="checkbox" value="ILS" id="aux-ils" checked>
+                  <label class="form-check-label" for="aux-ils">
+                    ILS (Instrument Landing System)<br><br>
+                  <div id="aux-ils-options" style="display: none; margin-left:20px;">
+                    <input type="radio" name="aux-ils-status" value="inoperante" id="aux-ils-inoperante" class="">
+                    <label for="aux-ils-inoperante">
+                      <h6>Inoperância Total</h6>
+                    </label><br>
+                    <input type="radio" name="aux-ils-status" value="restrição" id="aux-ils-restrição">
+                    <label for="aux-ils-restrição">
+                      <h6>Restrição de Uso</h6>
+                    </label><br>
+                    <div id="aux-ils-detalhes" style="display: none;">
+                      <span ><em>Detalhes (opcional):&emsp;</em></span>
+                      <input type="text" id="aux-ils-detalhes" placeholder="Exemplo: Rampa localizadora inoperante">
+                    </div>
+                    <br>
+                  </div>
+                  </label>
+                </div>
+                <div id="DME">
+                  <input class="form-check-input" type="checkbox" value="DME" id="aux-dme" checked>
+                  <label class="form-check-label" for="aux-dme">
+                    DME (Distance Measuring Equipment)<br><br>
+                  <div id="aux-dme-options" style="display: none; margin-left:20px;">
+                    <input type="radio" name="aux-dme-status" value="inoperante" id="aux-dme-inoperante" class="">
+                    <label for="aux-dme-inoperante">
+                      <h6>Inoperância Total</h6>
+                    </label><br>
+                    <input type="radio" name="aux-dme-status" value="restrição" id="aux-dme-restrição">
+                    <label for="aux-dme-restrição">
+                      <h6>Restrição de Uso</h6>
+                    </label><br>
+                    <div id="aux-dme-detalhes" style="display: none;">
+                      <span ><em>Detalhes (opcional):&emsp;</em></span>
+                      <input type="text" id="aux-dme-detalhes" placeholder="Exemplo: DME inoperante">
+                    </div>
+                    <br>
+                  </div>
+                  </label>
+                </div>
+                <div id="WDI">
+                  <input class="form-check-input" type="checkbox" value="WDI" id="aux-wdi" checked>
+                  <label class="form-check-label" for="aux-wdi">
+                    WDI (Wind Direction Indicator - Biruta)<br><br>
+                  <div id="aux-wdi-options" style="display: none; margin-left:20px;">
+                    <input type="radio" name="aux-wdi-status" value="inoperante" id="aux-wdi-inoperante" class="">
+                    <label for="aux-wdi-inoperante">
+                      <h6>Inoperância Total</h6>
+                    </label><br>
+                    <input type="radio" name="aux-wdi-status" value="restrição" id="aux-wdi-restrição">
+                    <label for="aux-wdi-restrição">
+                      <h6>Restrição de Uso</h6>
+                    </label><br>
+                    <div id="aux-wdi-detalhes" style="display: none;">
+                      <span ><em>Detalhes (opcional):&emsp;</em></span>
+                      <input type="text" id="aux-wdi-detalhes" placeholder="Exemplo: WDI inoperante">
+                    </div>
+                    <br>
+                  </div>
+                  </label>
+                </div>
+                <div id="RNAV">
+                  <input class="form-check-input" type="checkbox" value="RNAV" id="aux-rnav" checked>
+                  <label class="form-check-label" for="aux-rnav">
+                    RNAV/RNP (Area Navigation/Required Navigation Performance - GNSS)<br><br>
+                  <div id="aux-rnav-options" style="display: none; margin-left:20px;">
+                    <input type="radio" name="aux-rnav-status" value="inoperante" id="aux-rnav-inoperante" class="">
+                    <label for="aux-rnav-inoperante">
+                      <h6>Inoperância Total</h6>
+                    </label><br>
+                    <input type="radio" name="aux-rnav-status" value="restrição" id="aux-rnav-restrição">
+                    <label for="aux-rnav-restrição">
+                      <h6>Restrição de Uso</h6>
+                    </label><br>
+                    <div id="aux-rnav-detalhes" style="display: none;">
+                      <span ><em>Detalhes (opcional):&emsp;</em></span>
+                      <input type="text" id="aux-rnav-detalhes" placeholder="Exemplo: RNAV inoperante">
+                    </div>
+                    <br>
+                  </div>
+                  </label>
+                </div>
+                <div id="TACAN">
+                  <input class="form-check-input" type="checkbox" value="TACAN" id="aux-tacan" checked>
+                  <label class="form-check-label" for="aux-tacan">
+                    TACAN (Tactical Air Navigation)<br><br>
+                  <div id="aux-tacan-options" style="display: none; margin-left:20px;">
+                    <input type="radio" name="aux-tacan-status" value="inoperante" id="aux-tacan-inoperante" class="">
+                    <label for="aux-tacan-inoperante">
+                      <h6>Inoperância Total</h6>
+                    </label><br>
+                    <input type="radio" name="aux-tacan-status" value="restrição" id="aux-tacan-restrição">
+                    <label for="aux-tacan-restrição">
+                      <h6>Restrição de Uso</h6>
+                    </label><br>
+                    <div id="aux-tacan-detalhes" style="display: none;">
+                      <span ><em>Detalhes (opcional):&emsp;</em></span>
+                      <input type="text" id="aux-tacan-detalhes" placeholder="Exemplo: TACAN inoperante">
+                    </div>
+                    <br>
+                  </div>
+                  </label>
+                </div>
+              </div>
+
+              <button id="botão_relatório" class="btn btn-primary">Reportar</button>
+              <button id="clear-btn" class="btn text-light bg-success">Limpar</button>
+              <!--btn-outline-secondary TODO: This button should use the bootstrap class to became darker green on hover-->
+            </div>
+            <div id="luzes" style="display: none;">
+
+              <h5>Luzes (Balizamento, Farol)</h2>
+              <div id="ABN">
+                <input class="form-check-input" type="checkbox" value="ABN" id="lights-abn" checked>
+                <label class="form-check-label" for="lights-abn">
+                  ABN (Farol de Aeródromo - Aerodrome Beacon)<br><br>
+                <div id="lights-abn-options" style="display: none; margin-left:20px;">
+                  <input type="radio" name="lights-abn-status" value="inoperante" id="lights-abn-inoperante" class="">
+                  <label for="lights-abn-inoperante">
+                    <h6>Inoperância Total</h6>
+                  </label><br>
+                  <input type="radio" name="lights-abn-status" value="restrição" id="lights-abn-restrição">
+                  <label for="lights-abn-restrição">
+                    <h6>Restrição de Uso</h6>
+                  </label><br>
+                  <div id="lights-abn-detalhes" style="display: none;">
+                    <span ><em>Detalhes (opcional):&emsp;</em></span>
+                    <input type="text" id="lights-abn-detalhes" placeholder="Exemplo: ABN inoperante">
+                  </div>
+                  <br>
+                </div>
+                </label>
+              </div>
+              <div id="balizamento">
+                <input class="form-check-input" type="checkbox" value="Balizamento" id="lights-balizamento" checked>
+                <label class="form-check-label" for="lights-balizamento">
+                  Balizamento (Runway and Taxiway Lights)<br><br>
+                </label>
+                <div id="lights-balizamento-options" style="display: none; margin-left:20px;">
+                  <input type="radio" name="lights-balizamento-status" value="inoperante" id="lights-balizamento-inoperante" class="">
+                  <label for="lights-balizamento-inoperante">
+                    <h6>Inoperância Total</h6>
+                  </label><br>
+                  <input type="radio" name="lights-balizamento-status" value="restrição" id="lights-balizamento-restrição">
+                  <label for="lights-balizamento-restrição">
+                    <h6>Restrição de Uso</h6>
+                  </label><br>
+                  <div id="lights-balizamento-detalhes" style="display: none;">
+                    <span ><em>Detalhes (opcional):&emsp;</em></span>
+                    <input type="text" id="lights-balizamento-detalhes" placeholder="Exemplo: Balizamento inoperante">
+                  </div>
+                  <br>
+                </div>
+                <div id="PAPI">
+                  <input class="form-check-input" type="checkbox" value="PAPI" id="lights-papi" checked>
+                  <label class="form-check-label" for="lights-papi">
+                    PAPI (Precision Approach Path Indicator)<br><br>
+                  <div id="lights-papi-options" style="display: none; margin-left:20px;">
+                    <input type="radio" name="lights-papi-status" value="inoperante" id="lights-papi-inoperante" class="">
+                    <label for="lights-papi-inoperante">
+                      <h6>Inoperância Total</h6>
+                    </label><br>
+                    <input type="radio" name="lights-papi-status" value="restrição" id="lights-papi-restrição">
+                    <label for="lights-papi-restrição">
+                      <h6>Restrição de Uso</h6>
+                    </label><br>
+                    <div id="lights-papi-detalhes" style="display: none;">
+                      <span ><em>Detalhes (opcional):&emsp;</em></span>
+                      <input type="text" id="lights-papi-detalhes" placeholder="Exemplo: PAPI inoperante">
+                    </div>
+                    <br>
+                  </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div id="comunicação" style="display: none;">
+              <h5>Comunicação / Rádio</h5>
+              <div id="Equipamento Rádio">
+                <input class="form-check-input" type="checkbox" value="Rádio" id="comm-radio" checked>
+                <label class="form-check-label" for="comm-radio">
+                  Rádio (VHF Principal)<br><br>                
+                <div id="comm-radio-options" style=" margin-left:20px;">
+                  <input type="radio" name="comm-radio-status" value="inoperante" id="comm-radio-inoperante" class="">
+                  <label for="comm-radio-inoperante">
+                    <h6>Inoperância Total</h6>
+                  </label><br>
+                  <input type="radio" name="comm-radio-status" value="restrição" id="comm-radio-restrição">
+                  <label for="comm-radio-restrição">
+                    <h6>Restrição de Uso</h6>
+                  </label><br>
+                  <div id="comm-radio-detalhes" style="">
+                    <span ><em>Detalhes (opcional):&emsp;</em></span>
+                    <input type="text" id="comm-radio-detalhes" placeholder="Exemplo: Rádio inoperante">
+                  </div>
+                  <br>
+                  </div>
+                  </label>                
+              </div>
+            </div>
+            <div id="internet" style="display: none;">
+              <input type="checkbox" name="internet" id="" checked>
+              <label for="internet"><h5>Internet / Transmissão</h5></label>
+            </div>
+        <div class="col-12 col-md-12">
+          <div class="form-section">
+            <h5>Últimos relatórios</h5>
+            <div id="relatórios-lista" style="min-height:180px">
+              <div class="text-muted">Nenhum relatório</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- FIM DO MÓDULO DO OPERADOR -->
+  </main>
+  <footer class="text-center">
+    <small></small>
+  </footer>
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="./js/operador.js"></script>
+</body>
+
+</html>

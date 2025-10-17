@@ -1,0 +1,34 @@
+1. Condições Operacionais do Aeródromo
+
+Situação geral de operação do aeródromo, incluindo condições meteorológicas e restrições de uso.
+Inclui: VMC, IMC, MA, MD, MG, interdição, praticabilidade, impraticabilidade, pistas envolvidas.
+
+🌦️ 2. Meteorologia e Sensores (EMS)
+
+Equipamentos responsáveis por medir e registrar parâmetros meteorológicos.
+Inclui: Anemômetro, Psicrômetro, Barômetro, Pluviógrafo, RVR, Tetômetro.
+
+💡 3. Iluminação e Balizamento
+
+Sistemas de luzes e sinalização luminosa utilizados em pistas, taxiways e helipontos.
+Inclui: ABN, Balizamento, PAPI, VASIS, ILS e todas as categorias L1–L35.
+
+📡 4. Auxílios à Navegação Aérea
+
+Equipamentos que fornecem referência de navegação e orientação para aeronaves.
+Inclui: NDB, VOR, DME, RNAV/RNP, GBAS, SBAS, ABAS, Biruta (WDI), Recalada.
+
+🛫 5. Pistas e Áreas de Movimentação
+
+Estruturas físicas e operacionais de pouso, decolagem e taxiamento.
+Inclui: Situação das pistas (PRT, IMP, RWY), luzes e sinalizações associadas.
+
+📞 6. Comunicação Aeronáutica
+
+Equipamentos e sistemas usados para comunicações entre solo e aeronaves ou entre setores operacionais.
+Inclui: Rádios HF, VHF, UHF, telefones fixos e corporativos.
+
+🖧 7. Sistemas de Rede e Dados
+
+Plataformas e serviços que dependem de rede/internet para operação.
+Inclui: TSAWEB, SGTA-AMHS, OPMET, SIMM, TF-1–TF-4, INFOMET, SGTC, TATIC, servidores e estações de trabalho.

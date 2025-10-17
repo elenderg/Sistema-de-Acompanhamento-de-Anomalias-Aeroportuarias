@@ -1,0 +1,124 @@
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Sistema de Anomalias — Aeródromos</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="./css/styles.css">
+    <style> </style>
+  </head>
+  <body>
+    <header class="app-header py-3">
+      <div class="container d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+          <i class="fa-solid fa-plane fa-2x"></i>
+          <div>
+            <h4 class="mb-0">Painel de Anomalias — Aeródromos</h4>
+          </div>
+        </div>        
+      </div>
+    </header>
+    <main class="container my-4">     
+      <!-- MÓDULO DO SUPERVISOR -->
+      <section id="módulo-supervisor">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-section mb-3">
+              <h5>Supervisão — mapa</h5>
+              <div id="mapa"
+                class="leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"
+                tabindex="0" style="position: relative;">
+                <div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(0px, 0px, 0px);">
+                  <div class="leaflet-pane leaflet-tile-pane">
+                    <div class="leaflet-layer " style="z-index: 1; opacity: 1;">
+                      <div class="leaflet-tile-container leaflet-zoom-animated"
+                        style="z-index: 19; transform: translate3d(0px, 0px, 0px) scale(1);"><img alt=""
+                        src="https://b.tile.openstreetmap.org/4/5/8.png" class="leaflet-tile leaflet-tile-loaded"
+                        style="width: 256px; height: 256px; transform: translate3d(-223px, -182px, 0px); opacity: 1;">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="leaflet-pane leaflet-overlay-pane">
+                    <svg pointer-events="none" class="leaflet-zoom-animated"
+                      width="0" height="0" viewBox="0 0 0 0" style="transform: translate3d(0px, 0px, 0px);">
+                      <g>
+                        <path class="leaflet-interactive" stroke="green" stroke-opacity="1" stroke-width="3"
+                          stroke-linecap="round" stroke-linejoin="round" fill="green" fill-opacity="0.35"
+                          fill-rule="evenodd" d="M0 0"></path>
+                        <path class="leaflet-interactive" stroke="green" stroke-opacity="1" stroke-width="3"
+                          stroke-linecap="round" stroke-linejoin="round" fill="green" fill-opacity="0.35"
+                          fill-rule="evenodd" d="M0 0"></path>
+                        <path class="leaflet-interactive" stroke="green" stroke-opacity="1" stroke-width="3"
+                          stroke-linecap="round" stroke-linejoin="round" fill="green" fill-opacity="0.35"
+                          fill-rule="evenodd" d="M0 0"></path>
+                      </g>
+                    </svg>
+                  </div>
+                  <div class="leaflet-pane leaflet-shadow-pane"></div>
+                  <div class="leaflet-pane leaflet-marker-pane"></div>
+                  <div class="leaflet-pane leaflet-tooltip-pane"></div>
+                  <div class="leaflet-pane leaflet-popup-pane"></div>
+                  <div class="leaflet-proxy leaflet-zoom-animated"
+                    style="transform: translate3d(1503px, 2230.09px, 0px) scale(8);"></div>
+                </div>
+                <div class="leaflet-control-container">
+                  <div class="leaflet-top leaflet-left">
+                    <div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in"
+                      href="#" title="Zoom in" role="button" aria-label="Zoom in" aria-disabled="false"><span
+                      aria-hidden="true">+</span></a><a class="leaflet-control-zoom-out" href="#" title="Zoom out"
+                      role="button" aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a>
+                    </div>
+                  </div>
+                  <div class="leaflet-top leaflet-right"></div>
+                  <div class="leaflet-bottom leaflet-left"></div>
+                  <div class="leaflet-bottom leaflet-right">
+                    <div class="leaflet-control-attribution leaflet-control">
+                      <a href="https://leafletjs.com"
+                        title="A JavaScript library for interactive maps">
+                        <svg aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"
+                          class="leaflet-attribution-flag">
+                          <path fill="#4C7BE1" d="M0 0h12v4H0z"></path>
+                          <path fill="#FFD500" d="M0 4h12v3H0z"></path>
+                          <path fill="#E0BC00" d="M0 7h12v1H0z"></path>
+                        </svg>
+                        Leaflet
+                      </a>
+                      <span aria-hidden="true">|</span> © OpenStreetMap contributors
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-section">
+              <h5>Legenda e ações</h5>
+              <div class="d-flex gap-3 flex-wrap">
+                <div class="p-2 status-green rounded">Funcionando</div>
+                <div class="p-2 status-yellow rounded">Anomalia média</div>
+                <div class="p-2 status-red rounded">Anomalia crítica</div>
+                <button id="center-all" class="btn btn-outline-primary">Centralizar todos</button>
+                <button id="export-data" class="btn btn-outline-secondary">Exportar JSON</button>
+              </div>
+              <div id="map-info" class="mt-2"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="text-center">
+      <small></small>
+    </footer>
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./js/script pt-BR.js.js"></script>
+  </body>
+</html>

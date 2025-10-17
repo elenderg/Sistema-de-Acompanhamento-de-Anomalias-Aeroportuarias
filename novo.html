@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login e Cadastro — AeroAuth</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: radial-gradient(circle at 10% 20%, rgba(99,102,241,0.1), transparent 60%),
+                  radial-gradient(circle at 90% 80%, rgba(6,182,212,0.1), transparent 60%),
+                  linear-gradient(180deg, #0f172a, #020617);
+      font-family: 'Inter', sans-serif;
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border-radius: 1rem;
+    }
+    .fade {
+      transition: all 0.5s ease;
+    }
+    .hidden-section {
+      opacity: 0;
+      transform: translateY(30px);
+      pointer-events: none;
+    }
+    .visible-section {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+  <div class="glass shadow-2xl w-full max-w-md p-8 text-white">
+    <h2 id="form-title" class="text-3xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">Login</h2>
+
+    <!-- Login Section -->
+    <form id="login-section" class="fade visible-section">
+      <div class="mb-4">
+        <label class="block text-slate-300 mb-1">E-mail institucional</label>
+        <input id="email" type="email" placeholder="Digite seu e-mail" required class="w-full px-4 py-2 border border-slate-700 rounded-lg bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+      </div>
+      <div class="mb-4">
+        <label class="block text-slate-300 mb-1">Senha</label>
+        <input type="password" placeholder="Digite sua senha" required class="w-full px-4 py-2 border border-slate-700 rounded-lg bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+      </div>
+      <button type="submit" class="w-full bg-gradient-to-r from-indigo-500 to-cyan-500 text-white py-2 rounded-lg font-semibold hover:opacity-90 transition">Entrar</button>
+      <p class="text-center text-sm text-slate-400 mt-4">Não tem uma conta? <a id="show-register" href="#" class="text-cyan-400 hover:underline">Criar conta</a></p>
+    </form>
+
+    <!-- Cadastro Section -->
+    <form id="register-section" class="fade hidden-section">
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <label class="block text-slate-300 mb-1">Nome</label>
+          <input type="text" placeholder="Digite seu nome" required class="w-full px-4 py-2 border border-slate-700 rounded-lg bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1">Sobrenome</label>
+          <input type="text" placeholder="Digite seu sobrenome" required class="w-full px-4 py-2 border border-slate-700 rounded-lg bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="block text-slate-300 mb-1">E-mail institucional</label>
+        <input type="email" placeholder="nome.sobrenome@navbrasil.gov.br" required class="w-full rounded-lg p-3 bg-transparent border border-slate-700 text-white placeholder:text-slate-400 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20">
+      </div>
+      <div class="mb-4">
+        <label class="block text-slate-300 mb-1">Senha</label>
+        <input id="senha" type="password" placeholder="Crie uma senha" required class="w-full px-4 py-2 border border-slate-700 rounded-lg bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+      </div>
+      <div class="mb-4">
+        <label class="block text-slate-300 mb-1">Confirmar senha</label>
+        <input id="confirmar" type="password" placeholder="Repita sua senha" required class="w-full px-4 py-2 border border-slate-700 rounded-lg bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+      </div>
+      <div class="mb-4">
+        <label class="block text-slate-300 mb-1">Localidade (4 caracteres)</label>
+        <input type="text" maxlength="4" pattern="[A-Za-z0-9]{4}" title="Use apenas 4 caracteres alfanuméricos" placeholder="Ex: SBSP" required class="w-full px-4 py-2 border border-slate-700 rounded-lg bg-transparent text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 uppercase">
+      </div>
+      <div class="mb-4">
+        <label class="block text-slate-300 mb-1">Perfil desejado</label>
+        <div class="flex flex-col space-y-2 text-slate-300">
+          <label class="inline-flex items-center space-x-2"><input type="radio" name="perfil" value="Operador" required class="text-cyan-400 focus:ring-cyan-400"/> <span>Operador</span></label>
+          <label class="inline-flex items-center space-x-2"><input type="radio" name="perfil" value="Gerente" class="text-cyan-400 focus:ring-cyan-400"/> <span>Gerente</span></label>
+          <label class="inline-flex items-center space-x-2"><input type="radio" name="perfil" value="Supervisor" class="text-cyan-400 focus:ring-cyan-400"/> <span>Supervisor</span></label>
+        </div>
+      </div>
+      <button type="submit" class="w-full bg-gradient-to-r from-indigo-500 to-cyan-500 text-white py-2 rounded-lg font-semibold hover:opacity-90 transition">Cadastrar</button>
+      <p class="text-center text-sm text-slate-400 mt-4">Já tem uma conta? <a id="show-login" href="#" class="text-cyan-400 hover:underline">Fazer login</a></p>
+    </form>
+  </div>
+
+  <script>
+    const loginSection = document.getElementById('login-section');
+    const registerSection = document.getElementById('register-section');
+    const formTitle = document.getElementById('form-title');
+    const showRegister = document.getElementById('show-register');
+    const showLogin = document.getElementById('show-login');
+
+    showRegister.addEventListener('click', (e) => {
+      e.preventDefault();
+      formTitle.textContent = 'Cadastro';
+      loginSection.classList.replace('visible-section', 'hidden-section');
+      registerSection.classList.replace('hidden-section', 'visible-section');
+    });
+
+    showLogin.addEventListener('click', (e) => {
+      e.preventDefault();
+      formTitle.textContent = 'Login';
+      registerSection.classList.replace('visible-section', 'hidden-section');
+      loginSection.classList.replace('hidden-section', 'visible-section');
+    });
+
+    const senha = document.getElementById('senha');
+    const confirmar = document.getElementById('confirmar');
+
+    confirmar.addEventListener('input', () => {
+      if (confirmar.value !== senha.value) {
+        confirmar.setCustomValidity('As senhas não coincidem');
+      } else {
+        confirmar.setCustomValidity('');
+      }
+    });
+  </script>
+</body>
+</html>

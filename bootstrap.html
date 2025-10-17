@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AeroAuth — Acesso e Cadastro</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <style>
+    :root {
+      --glass-bg: rgba(255,255,255,0.06);
+      --accent: linear-gradient(90deg,#7c3aed,#06b6d4);
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(254, 254, 254, 0.08), transparent),
+                  radial-gradient(900px 400px at 90% 90%, rgba(0, 0, 0, 0.06), transparent),
+                  linear-gradient(180deg,#ffffff 0%, #ffffff 100%);
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+      color: #e6edf3;
+    }
+
+    .glass {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      border: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(10px) saturate(120%);
+    }
+
+    .form-section {
+      transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+    }
+
+    .hidden-section {
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      position: absolute;
+    }
+
+    .visible-section {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+      position: static;
+    }
+
+    .tooltip-inner {
+      background-color: rgba(15,23,42,0.95);
+      color: #e6edf3;
+    }
+
+    .form-control {
+      background-color: transparent !important;
+      color: #fff !important;
+      border-color: #334155 !important;
+    }
+
+    .form-control::placeholder {
+      color: #505964;
+    }
+
+    .form-control:focus {
+      border-color: #06b6d4 !important;
+      box-shadow: 0 0 0 0.2rem rgba(6,182,212,0.25);
+    }
+
+    .btn-gradient {
+      background: var(--accent);
+      border: none;
+      color: white;
+    }
+
+    .btn-gradient:hover {
+      opacity: 0.9;
+    }
+
+    .pwd-bar {
+      height: 6px;
+      border-radius: 6px;
+      background: #1e293b;
+      overflow: hidden;
+    }
+
+    .pwd-bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 6px;
+      transition: width 0.2s;
+    }
+
+    small {
+      color: #232528;
+    }
+
+    legend {
+      color: #24272b;
+    }
+
+    .form-check-label {
+      color: #161719;
+    }
+
+    a {
+      color: #67e8f9;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      color: #64748b;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container py-5">
+    <div class="row g-4 align-items-center justify-content-center">
+
+      <!-- Painel esquerdo -->
+      <div class="col-md-6 d-none d-md-block">
+        <div class="p-5 rounded-4 glass position-relative shadow-lg">
+          <div class="d-flex align-items-center mb-4">
+            <div class="p-3 rounded-circle bg-gradient" style="background: var(--accent);">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 2L2 7v6c0 5 4 9 10 9s10-4 10-9V7l-10-5z"/></svg>
+            </div>
+            <div class="ms-3">
+              <h2 class="fw-semibold text-white mb-0">AeroAuth</h2>
+              <p id="info-subtitle" class="mb-0 small text-secondary">Painel seguro de acesso — operações aeroportuárias</p>
+            </div>
+          </div>
+          <img src="./img/logo-nav.png" class="img-fluid mb-3" alt="Logomarca da Nav Brasil"/>
+          <h4 id="info-title" class="text-white mb-3">Acesso seguro e rápido</h4>
+          <p id="info-text" class="text-secondary mb-0">Entre com seu e-mail institucional para continuar. Esta tela foi desenhada para clareza, acessibilidade e boa usabilidade.</p>
+          <div class="position-absolute end-0 bottom-0 translate-middle opacity-25 rounded-circle"
+               style="width: 300px; height: 300px; background: var(--accent); filter: blur(80px);"></div>
+        </div>
+      </div>
+
+      <!-- Painel direito -->
+      <div class="col-md-6 position-relative fade-container">
+
+        <!-- Login -->
+        <section id="login-section" class="form-section visible-section glass p-5 rounded-4 shadow-lg">
+          <form id="loginForm" novalidate>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h4 class="text-white mb-0">Entrar</h4>
+              <button type="button" class="btn btn-sm btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="top" title="Use seu e-mail institucional. Senha com mínimo de 8 caracteres.">
+                ?
+              </button>
+            </div>
+
+            <div class="mb-3">
+              <label for="login_email" class="form-label small text-secondary">E-mail</label>
+              <input id="login_email" type="email" class="form-control" placeholder="nome.sobrenome@empresa.com" required>
+              <small>O uso do seu e-mail institucional é recomendado.</small>
+            </div>
+
+            <div class="mb-3">
+              <label for="login_password" class="form-label small text-secondary">Senha</label>
+              <div class="position-relative">
+                <input id="login_password" type="password" class="form-control" placeholder="Mínimo de 8 caracteres" required minlength="8">
+                <button type="button" id="togglePwd" class="btn btn-sm btn-outline-secondary position-absolute end-0 top-0 mt-1 me-1">👁️</button>
+              </div>
+              <small>Use uma senha forte e única.</small>
+              <div class="pwd-bar mt-2"><div id="pwdBar" class="pwd-bar-fill"></div></div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="remember">
+                <label class="form-check-label small" for="remember">Manter-me conectado</label>
+              </div>
+              <a href="#" class="small">Esqueci a senha</a>
+            </div>
+
+            <button type="submit" id="loginSubmitBtn" class="btn btn-gradient w-100 py-2 mb-3">
+              <span>Entrar</span>
+            </button>
+
+            <div class="text-center text-secondary small mb-2">ou entre com</div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-between mb-3">
+              <button type="button" class="btn btn-outline-secondary w-50">Microsoft</button>
+              <button type="button" class="btn btn-outline-secondary w-50">Google</button>
+            </div>
+
+            <p class="small text-center text-secondary">Ainda não tem conta?
+              <a href="#" id="show-register-btn">Criar conta</a></p>
+          </form>
+          <footer class="text-center small mt-3">Versão de protótipo — autenticação real deve usar HTTPS e backend seguro.</footer>
+        </section>
+
+        <!-- Cadastro -->
+        <section id="register-section" class="form-section hidden-section glass p-5 rounded-4 shadow-lg">
+          <form id="registerForm" novalidate>
+            <h4 class="text-white mb-3">Criar conta</h4>
+
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label small text-secondary">Nome</label>
+                <input id="reg_nome" type="text" class="form-control" placeholder="Seu nome" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small text-secondary">Sobrenome</label>
+                <input id="reg_sobrenome" type="text" class="form-control" placeholder="Seu sobrenome" required>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small text-secondary">E-mail institucional</label>
+              <input id="reg_email" type="email" class="form-control" placeholder="seu.nome@empresa.com" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small text-secondary">Senha</label>
+              <input id="reg_senha" type="password" class="form-control" placeholder="Crie uma senha segura" minlength="8" required>
+              <div class="pwd-bar mt-2"><div id="reg_pwdBar" class="pwd-bar-fill"></div></div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small text-secondary">Localidade (ICAO)</label>
+              <input id="reg_localidade" type="text" class="form-control text-uppercase" placeholder="Ex: SBSP" maxlength="4" pattern="[A-Za-z0-9]{4}" required>
+              <small>Deve conter 4 caracteres alfanuméricos.</small>
+            </div>
+
+            <fieldset class="mb-3">
+              <legend class="small mb-2">Selecione o Perfil de acesso desejado</legend>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="perfil" value="Operador" required>
+                <label class="form-check-label">Operador</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="perfil" value="Gerente">
+                <label class="form-check-label">Gerente</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="perfil" value="Supervisor">
+                <label class="form-check-label">Supervisor</label>
+              </div>
+            </fieldset>
+
+            <button type="submit" id="registerSubmitBtn" class="btn btn-gradient w-100 py-2 mb-3">
+              <span>Cadastrar</span>
+            </button>
+
+            <p class="small text-center text-secondary">Já possui uma conta?
+              <a href="#" id="show-login-btn">Entrar</a></p>
+          </form>
+          <footer class="text-center small mt-3">Versão de protótipo — validação client-side apenas.</footer>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // --- Alternância login/cadastro ---
+    const loginSection = document.getElementById('login-section');
+    const registerSection = document.getElementById('register-section');
+    const showRegisterBtn = document.getElementById('show-register-btn');
+    const showLoginBtn = document.getElementById('show-login-btn');
+    const infoSubtitle = document.getElementById('info-subtitle');
+    const infoTitle = document.getElementById('info-title');
+    const infoText = document.getElementById('info-text');
+
+    showRegisterBtn.addEventListener('click', e => {
+      e.preventDefault();
+      loginSection.classList.replace('visible-section', 'hidden-section');
+      registerSection.classList.replace('hidden-section', 'visible-section');
+      infoSubtitle.textContent = 'Crie sua conta de acesso';
+      infoTitle.textContent = 'Cadastre-se';
+      infoText.textContent = 'Preencha suas informações básicas e selecione o perfil adequado.';
+    });
+
+    showLoginBtn.addEventListener('click', e => {
+      e.preventDefault();
+      registerSection.classList.replace('visible-section', 'hidden-section');
+      loginSection.classList.replace('hidden-section', 'visible-section');
+      infoSubtitle.textContent = 'Painel seguro de acesso — operações aeroportuárias';
+      infoTitle.textContent = 'Acesso seguro e rápido';
+      infoText.textContent = 'Entre com seu e-mail institucional para continuar.';
+    });
+
+    // --- Tooltip ---
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    [...tooltipTriggerList].map(el => new bootstrap.Tooltip(el));
+
+    // --- Barra de força da senha ---
+    function calcStrength(v) {
+      let s = 0;
+      if (v.length >= 8) s++;
+      if (/[A-Z]/.test(v)) s++;
+      if (/[a-z]/.test(v)) s++;
+      if (/[0-9]/.test(v)) s++;
+      if (/[^A-Za-z0-9]/.test(v)) s++;
+      return Math.min(s, 5);
+    }
+
+    function bindPwdBar(inputId, barId) {
+      const input = document.getElementById(inputId);
+      const bar = document.getElementById(barId);
+      input.addEventListener('input', () => {
+        const s = calcStrength(input.value);
+        const pct = (s / 5) * 100;
+        bar.style.width = pct + '%';
+        if (pct < 40) bar.style.background = 'linear-gradient(90deg,#fb7185,#f97316)';
+        else if (pct < 80) bar.style.background = 'linear-gradient(90deg,#f59e0b,#f97316)';
+        else bar.style.background = 'linear-gradient(90deg,#10b981,#06b6d4)';
+      });
+    }
+
+    bindPwdBar('login_password', 'pwdBar');
+    bindPwdBar('reg_senha', 'reg_pwdBar');
+
+    // --- Alternar visibilidade da senha ---
+    const togglePwd = document.getElementById('togglePwd');
+    const pwdInput = document.getElementById('login_password');
+    togglePwd.addEventListener('click', () => {
+      pwdInput.type = pwdInput.type === 'password' ? 'text' : 'password';
+    });
+  </script>
+</body>
+</html>
